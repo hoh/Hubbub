@@ -16,38 +16,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-
-from multiprocessing import Process
+from .models import Message
 
 
-def run_adapter():
-    print('run_adapter')
-    from adapter import PidginDBusAdapter
+def sent_vs_recv():
+    msg_all = Message.select()
 
-    adapter = PidginDBusAdapter()
-    adapter.run()
-
-
-def run_bottle():
-    print('run_bottle')
-    from webui import app
-
-    app.run(debug=True, reload=True)
-
-
-if __name__ == '__main__':
-
-    wait_for_process = None
-
-    if 'pidgin' in sys.argv:
-        pa = Process(target=run_adapter)
-        pa.start()
-        wait_for_process = pa
-
-    if 'webui' in sys.argv:
-        pb = Process(target=run_bottle)
-        pb.start()
-        wait_for_process = pb
-
-    wait_for_process.join()
+    return [{"Direction": "Received" if received else "Sent",
+             "Type": "Dummy" if dummy else "Real",
+             "Count": (
+                 msg_all
+                 .where(Message.received == received)
+                 .where(Message.dummy == dummy)
+                 .count()
+                 ),
+             }
+            for received in [True, False]
+            for dummy in [True, False]
+            ]
