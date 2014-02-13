@@ -18,7 +18,7 @@
 
 from .peewee import (
     Model, SqliteDatabase,
-    CharField, DateField, BooleanField, IntegerField
+    CharField, DateTimeField, BooleanField, IntegerField
 )
 
 db = SqliteDatabase('drugstore.db')
@@ -27,7 +27,7 @@ db = SqliteDatabase('drugstore.db')
 class Message(Model):
     text = CharField()
     length = IntegerField()
-    date = DateField()
+    date = DateTimeField()
     dummy = BooleanField()
     received = BooleanField()
 
