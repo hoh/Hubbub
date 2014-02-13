@@ -9,6 +9,11 @@ Hubbub consists of two parts :
 
 ## Installation
 
+Install the [DummyMore](https://github.com/hoh/DummyMore) plugin for Pidgin.
+
+To so, download the binary file from [the releases](https://github.com/hoh/DummyMore/releases) that fits your architecture (Linux i686 or x86_64 available) and copy it in your `~/.purple/plugins` directory.
+
+
 ### On Ubuntu
 
 Packages:
