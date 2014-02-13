@@ -34,3 +34,15 @@ def sent_vs_recv():
             for received in [True, False]
             for dummy in [True, False]
             ]
+
+
+def sent_and_recv_over_time():
+    msg_all = Message.select().where(Message.dummy == False)
+
+    return [{"Direction": "Received" if msg.received else "Sent",
+             "Type": "Real",
+             "Date": msg.date.strftime('%Y-%m-%dT%H:%M'),  # Minute, no seconds
+             "Count": 1,
+             }
+            for msg in msg_all
+            ]

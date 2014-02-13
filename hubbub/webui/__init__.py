@@ -27,7 +27,7 @@ import tumulus.lib as lib
 
 from .bottle import Bottle
 
-from drugstore.stats import sent_vs_recv
+from drugstore.stats import sent_vs_recv, sent_and_recv_over_time
 
 app = application = Bottle()
 
@@ -38,29 +38,57 @@ def index():
         t.head(
             lib.js('d3'),
             lib.js('dimple'),
-            lib.js('/graph.js'),
+            lib.js('/stats/sent_vs_recv.js'),
+            lib.js('/stats/sent_and_recv_over_time.js'),
         ),
         t.body(
             t.h1('Statistics'),
-            t.div(id='graph'),
+
+            t.h2('Sent vs Recv'),
+            t.div(id='sent_vs_recv'),
+
+            t.h2('Messages per minute'),
+            t.div(id='sent_and_recv_over_time'),
         ),
     ).build()
 
 
-@app.route('/graph.js')
-def graph():
+@app.route('/stats/sent_vs_recv.js')
+def sent_vs_recv_js():
     return '''
-        var svg = dimple.newSvg("#graph", 800, 400);
-        d3.json("/data.json", function (data) {
-            var chart = new dimple.chart(svg, data);
+        var sent_vs_recv = dimple.newSvg("#sent_vs_recv", 800, 400);
+        d3.json("/stats/sent_vs_recv.json", function (data) {
+            var chart = new dimple.chart(sent_vs_recv, data);
             chart.addCategoryAxis("x", "Direction");
             chart.addMeasureAxis("y", "Count");
             chart.addSeries("Type", dimple.plot.bar);
+            chart.addLegend(180, 10, 360, 20, "right");
             chart.draw();
         })
         '''
 
 
-@app.route('/data.json')
-def data():
+@app.route('/stats/sent_vs_recv.json')
+def sent_vs_recv_json():
     return json.dumps(sent_vs_recv())
+
+
+@app.route('/stats/sent_and_recv_over_time.js')
+def sent_and_recv_over_time_js():
+    return '''
+        var sent_and_recv_over_time = dimple.newSvg("#sent_and_recv_over_time", 800, 400);
+        d3.json("/stats/sent_and_recv_over_time.json", function (data) {
+            var chart = new dimple.chart(sent_and_recv_over_time, data);
+            var x = chart.addCategoryAxis("x", "Date");
+            x.addOrderRule("Date");
+            chart.addMeasureAxis("y", "Count");
+            chart.addSeries("Direction", dimple.plot.bar);
+            chart.addLegend(180, 10, 360, 20, "right");
+            chart.draw();
+        })
+        '''
+
+
+@app.route('/stats/sent_and_recv_over_time.json')
+def sent_and_recv_over_time_json():
+    return json.dumps(sent_and_recv_over_time())
