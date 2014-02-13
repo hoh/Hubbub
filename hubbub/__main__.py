@@ -45,9 +45,14 @@ if __name__ == '__main__':
         pa.start()
         wait_for_process = pa
 
+    if 'setup' in sys.argv:
+        from drugstore.models import create as create_db
+        create_db()
+
     if 'webui' in sys.argv:
         pb = Process(target=run_bottle)
         pb.start()
         wait_for_process = pb
 
-    wait_for_process.join()
+    if wait_for_process:
+        wait_for_process.join()
