@@ -9,16 +9,27 @@ Hubbub consists of two parts :
 
 ## Starting Hubbub
 
+Open a terminal in the directory where you cloned the repository and load the `hubbub` virtualenv:
+
+```bash
+cd Path/Where/You/Will/Clone/Repositories/Hubbub
+workon hubbub
+```
+
 ### Pidgin plugin
 
 Hubbub connects to Pidgin using DBus, so you can start it and stop it at anytime without restarting Pidgin. To work, Hubbub has to run on the desktop of the user that's using Pidgin.
 
-To start the plugin, simply run:
-```bash
-cd Path/Where/You/Will/Clone/Repositories/Hubbub
-workon hubbub
-python hubbub
-```
+To start the plugin, run `python hubbub pidgin`.
+
+### Web Interface
+
+To start the web interface, run `python hubbub webui`. You can then open you webbrowser on http://localhost:8080/ .
+
+### Both together
+
+You can run both the Pidgin plugin and the Web UI at the same time with `python hubbub pidgin webui`.
+
 
 ## Installation
 
