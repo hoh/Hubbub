@@ -115,7 +115,6 @@ class PidginDBusAdapter:
         print('writing_im_msg', account, sender, message, conversation, flags)
 
     def send_im_msg(self, message):
-        record('send_im_msg ' + message)
         print('send_im_msg', message)
         for conv in self.purple.PurpleGetIms():
             print(' -conv', conv)
