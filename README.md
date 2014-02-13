@@ -7,7 +7,18 @@ Hubbub consists of two parts :
 * `pidgin`: a DBus client that connects to Pidgin and monitors IM traffic
 * `webui`: a web user interface showing stats about IM traffic
 
+## Starting Hubbub
 
+### Pidgin plugin
+
+Hubbub connects to Pidgin using DBus, so you can start it and stop it at anytime without restarting Pidgin. To work, Hubbub has to run on the desktop of the user that's using Pidgin.
+
+To start the plugin, simply run:
+```bash
+cd Path/Where/You/Will/Clone/Repositories/Hubbub
+workon hubbub
+python hubbub
+```
 
 ## Installation
 
@@ -36,4 +47,11 @@ pip install --upgrade tumulus
 
 _You know that you are in the 'hubbub' virtualenv if your prompt starts with '(hubbub)'._
 
+### All platforms
 
+Clone the repository:
+
+```bash
+cd Path/Where/You/Will/Clone/Repositories/
+git clone https://github.com/hoh/Hubbub.git
+```
