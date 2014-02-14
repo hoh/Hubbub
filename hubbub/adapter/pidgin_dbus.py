@@ -106,12 +106,13 @@ class PidginDBusAdapter:
 
     # def writing_im_msg(self, *args):
     def writing_im_msg(self, account, sender, message, conversation, flags):
+        buddy, buddy_device = sender.split('/')
         if flags == 1:
             print('You sent', message)
-            store(message, received=False)
+            store(message, buddy=buddy, received=False)
         else:
-            print('You received', message)
-            store(message, received=True)
+            print('You received', message, 'from', sender)
+            store(message, buddy=buddy, received=True)
         print('writing_im_msg', account, sender, message, conversation, flags)
 
     def send_im_msg(self, message):

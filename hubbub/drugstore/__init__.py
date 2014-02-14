@@ -25,7 +25,7 @@ def is_dummy(message):
         or message.startswith('<FONT>?DUMMY:')
 
 
-def store(message, received=True):
+def store(message, buddy, received=True):
     print('store... [{}]'.format(message))
 
     m = Message()
@@ -35,5 +35,6 @@ def store(message, received=True):
     m.date = datetime.now()
     m.dummy = is_dummy(message)
     m.received = received
+    m.buddy = buddy
 
     m.save()

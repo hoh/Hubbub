@@ -30,6 +30,7 @@ class Message(Model):
     date = DateTimeField()
     dummy = BooleanField()
     received = BooleanField()
+    buddy = CharField()
 
     class Meta:
         database = db
