@@ -27,7 +27,7 @@ import tumulus.lib as lib
 
 from .bottle import Bottle
 
-from drugstore.stats import sent_vs_recv, sent_and_recv_over_time
+from drugstore.stats import sent_vs_recv, sent_and_recv_over_time, user_profile
 
 app = application = Bottle()
 
@@ -40,6 +40,7 @@ def index():
             lib.js('dimple'),
             lib.js('/stats/sent_vs_recv.js'),
             lib.js('/stats/sent_and_recv_over_time.js'),
+            lib.js('/stats/user_profile.js'),
         ),
         t.body(
             t.h1('Statistics'),
@@ -49,6 +50,9 @@ def index():
 
             t.h2('Messages per minute'),
             t.div(id='sent_and_recv_over_time'),
+
+            t.h2('User profile'),
+            t.div(id='user_profile'),
         ),
     ).build()
 
@@ -92,3 +96,23 @@ def sent_and_recv_over_time_js():
 @app.route('/stats/sent_and_recv_over_time.json')
 def sent_and_recv_over_time_json():
     return json.dumps(sent_and_recv_over_time())
+
+
+@app.route('/stats/user_profile.js')
+def user_profile_js():
+    return '''
+        var user_profile = dimple.newSvg("#user_profile", 800, 400);
+        d3.json("/stats/user_profile.json", function (data) {
+            var chart = new dimple.chart(user_profile, data);
+            chart.addCategoryAxis("x", ["Buddy", "Direction"]);
+            chart.addMeasureAxis("y", "Count");
+            chart.addSeries("Type", dimple.plot.bar);
+            chart.addLegend(200, 10, 380, 20, "right");
+            chart.draw();
+        })
+    '''
+
+
+@app.route('/stats/user_profile.json')
+def user_profile_json():
+    return json.dumps(user_profile())

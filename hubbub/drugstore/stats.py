@@ -31,8 +31,8 @@ def sent_vs_recv():
                  .count()
                  ),
              }
-            for received in [True, False]
-            for dummy in [True, False]
+            for received in (True, False)
+            for dummy in (True, False)
             ]
 
 
@@ -46,3 +46,22 @@ def sent_and_recv_over_time():
              }
             for msg in msg_all
             ]
+
+
+def user_profile():
+    buddies = tuple(m.buddy for m in Message.select(Message.buddy).distinct())
+
+    return [{
+        'Type': 'Dummy' if dummy else 'Real',
+        'Direction': 'Received' if received else 'Sent',
+        'Buddy': buddy,
+        'Count': Message.select().where(
+            Message.dummy == dummy,
+            Message.received == received,
+            Message.buddy == buddy,
+            ).count()
+        }
+        for received in (True, False)
+        for dummy in (True, False)
+        for buddy in buddies
+    ]
