@@ -16,6 +16,12 @@ cd Path/Where/You/Will/Clone/Repositories/Hubbub
 workon hubbub
 ```
 
+### Create the SQLite database file
+
+```bash
+python hubbub setup
+```
+
 ### Pidgin plugin
 
 Hubbub connects to Pidgin using DBus, so you can start it and stop it at anytime without restarting Pidgin. To work, Hubbub has to run on the desktop of the user that's using Pidgin.
@@ -45,6 +51,8 @@ Packages:
 ```bash
 sudo apt-get install python3-dev python3-dbus libxml2-dev libxslt-dev virtualenvwrapper
 ```
+
+Open a new terminal to enable _virtualenvwrapper_. If you don't, you will get the error `mkvirtualenv: command not found`.
 
 Create a Python virtualenv:
 ```bash
