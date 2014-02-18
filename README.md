@@ -18,6 +18,8 @@ workon hubbub
 
 ### Create the SQLite database file
 
+_Only run this command after the initial installation of after deleting the database file:_
+
 ```bash
 python hubbub setup
 ```
