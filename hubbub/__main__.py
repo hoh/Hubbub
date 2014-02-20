@@ -49,24 +49,27 @@ if __name__ == '__main__':
 
     wait_for_process = None
 
+    if 'setup' in sys.argv:
+        from drugstore.models import create as create_db
+        create_db()
+
     if 'pidgin' in sys.argv:
         pa = Process(target=run_adapter)
         pa.start()
         wait_for_process = pa
 
-    if 'setup' in sys.argv:
-        from drugstore.models import create as create_db
-        create_db()
+    if 'generator' in sys.argv:
+        print(1)
+        pc = Process(target=run_generator)
+        print(2)
+        pc.start()
+        print(3)
+        wait_for_process = pc
 
     if 'webui' in sys.argv:
         pb = Process(target=run_bottle)
         pb.start()
         wait_for_process = pb
-
-    if 'generator' in sys.argv:
-        pc = Process(target=run_generator)
-        pc.start()
-        wait_for_process = pc
 
     if wait_for_process:
         wait_for_process.join()

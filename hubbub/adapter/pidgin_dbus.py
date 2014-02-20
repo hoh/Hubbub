@@ -119,9 +119,11 @@ class PidginDBusAdapter:
             print('You received', message, 'from', sender)
             store(message, buddy=buddy, received=True)
 
-    def send_im_msg(self, message):
-        print('send_im_msg', message)
-        for conv in self.purple.PurpleGetIms():
+    def send_im_msg(self, message, recipient):
+        print('send_im_msg', message, recipient)
+        for account in self.purple.PurpleAccountsGetAllActive():
+            print('account=', account)
+            conv = self.purple.PurpleConversationNew(1, account, recipient)
             print(' -conv', conv)
             self.purple.PurpleConvImSend(
                 self.purple.PurpleConvIm(conv),

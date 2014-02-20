@@ -32,5 +32,5 @@ class HeartBeatGenerator:
 
     def run(self):
         while True:
-            self.adapter.send_im_msg('Hello')
-            sleep(random(self.period * 2))
+            self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')
+            sleep(random() * self.period * 2)
