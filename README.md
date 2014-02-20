@@ -45,6 +45,7 @@ First, install the [DummyMore](https://github.com/hoh/DummyMore) plugin for Pidg
 
 To so, download the binary file from [the releases](https://github.com/hoh/DummyMore/releases) that fits your architecture (Linux i686 or x86_64 available) and copy it in your `~/.purple/plugins` directory.
 
+Do forget to enable the plugin in the Pidgin menu.
 
 ### On Ubuntu
 
