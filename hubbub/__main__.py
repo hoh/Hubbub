@@ -36,6 +36,15 @@ def run_bottle():
     app.run(debug=True, reload=True)
 
 
+def run_generator():
+    print('run_generator')
+    from generator import HeartBeatGenerator
+    from adapter import PidginDBusAdapter
+
+    adapter = PidginDBusAdapter()
+    generator = HeartBeatGenerator(adapter)
+    generator.run()
+
 if __name__ == '__main__':
 
     wait_for_process = None
@@ -53,6 +62,11 @@ if __name__ == '__main__':
         pb = Process(target=run_bottle)
         pb.start()
         wait_for_process = pb
+
+    if 'generator' in sys.argv:
+        pc = Process(target=run_generator)
+        pc.start()
+        wait_for_process = pc
 
     if wait_for_process:
         wait_for_process.join()
