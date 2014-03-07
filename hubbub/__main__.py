@@ -20,6 +20,23 @@ import sys
 
 from multiprocessing import Process
 
+USAGE = '''
+NAME
+    hubbub
+SYNOPSIS
+    hubbub [setup] [pidgin] [generator] [webui]
+OPTIONS
+    setup
+        Creates a new SQLite database to keep track of metadata for learning.
+    pidgin
+        Connect to Pidgin via DBus to collect a copy of the user's traffic.
+    generator
+        Generate dummy messages and send them through Pidgin via DBus.
+    webui
+        Launch a web user interface on http://localhost:8080 to monitor the
+        actions of Hubbub.
+'''
+
 
 def run_adapter():
     print('run_adapter')
@@ -73,3 +90,5 @@ if __name__ == '__main__':
 
     if wait_for_process:
         wait_for_process.join()
+    elif 'setup' not in sys.argv:
+        print(USAGE)
