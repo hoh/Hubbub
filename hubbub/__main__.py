@@ -18,7 +18,7 @@
 
 import sys
 
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 
 USAGE = '''
 NAME
@@ -38,7 +38,7 @@ OPTIONS
 '''
 
 
-def run_adapter():
+def run_adapter(q_messages):
     print('run_adapter')
     from adapter.pidgin_dbus import PidginDBusAdapter
 
@@ -53,7 +53,7 @@ def run_bottle():
     app.run(debug=True, reload=True)
 
 
-def run_generator():
+def run_generator(q_messages):
     print('run_generator')
     from generator import HeartBeatGenerator
 
@@ -69,28 +69,34 @@ def run_generator():
 if __name__ == '__main__':
 
     wait_for_process = None
+    # Queue in which observed messages will be pushed
+    # for the generator to take into account.
+    q_messages = Queue()
 
     if 'setup' in sys.argv:
         from drugstore.models import create as create_db
         create_db()
 
     if 'pidgin' in sys.argv:
-        pa = Process(target=run_adapter)
+        pa = Process(target=run_adapter, args=(q_messages,))
         pa.start()
         wait_for_process = pa
 
     if 'generator' in sys.argv:
-        print(1)
-        pc = Process(target=run_generator)
-        print(2)
+        pc = Process(target=run_generator, args=(q_messages,))
         pc.start()
-        print(3)
         wait_for_process = pc
 
     if 'webui' in sys.argv:
         pb = Process(target=run_bottle)
         pb.start()
         wait_for_process = pb
+
+    if 'testqueue' in sys.argv:
+        # For tests only, delete this afterwards, consumption
+        # should go in the generator.
+        while True:
+            print('Pop', q_messages.get())
 
     if wait_for_process:
         wait_for_process.join()

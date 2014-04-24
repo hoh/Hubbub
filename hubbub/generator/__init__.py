@@ -44,4 +44,3 @@ class HeartBeatGenerator(object):
         loop = asyncio.get_event_loop()
         asyncio.async(self.loop())
         loop.run_forever()
-

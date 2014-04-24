@@ -31,7 +31,8 @@ from drugstore import store
 class PidginDBusAdapter:
     output = None
 
-    def __init__(self):
+    def __init__(self, q_messages):
+        self.q_messages = q_messages
 
         bus = dbus.SessionBus()
 
@@ -111,6 +112,12 @@ class PidginDBusAdapter:
             buddy, buddy_device = sender.split('/')
         else:
             buddy, buddy_device = sender, None
+
+        self.q_messages.put({
+            'message': message,
+            'buddy': buddy,
+            'received': (flags == 1),
+            })
 
         if flags == 1:
             print('You sent', message)
