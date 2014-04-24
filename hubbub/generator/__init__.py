@@ -18,6 +18,7 @@
 
 from random import random
 from time import sleep
+import asyncio
 
 
 class HeartBeatGenerator(object):
@@ -25,12 +26,22 @@ class HeartBeatGenerator(object):
         Generates new messages at relatively constant time intervals.
         (relatively = random around an average)
     '''
-    period = 10  # average period between messages, in seconds
+    period = 2  # average period between messages, in seconds
 
     def __init__(self, adapter):
         self.adapter = adapter
 
-    def run(self):
+    def loop(self):
+        'Async job, beats every ~self.period seconds.'
         while True:
-            self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')
-            sleep(random() * self.period * 2)
+            yield from asyncio.sleep(random() * self.period * 2)
+            self.beat()
+
+    def beat(self):
+        self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')
+
+    def run(self):
+        loop = asyncio.get_event_loop()
+        asyncio.async(self.loop())
+        loop.run_forever()
+
