@@ -18,7 +18,7 @@
 
 from random import random
 from time import sleep
-import asyncio
+from multiprocessing import Queue
 
 
 class HeartBeatGenerator(object):
@@ -26,21 +26,19 @@ class HeartBeatGenerator(object):
         Generates new messages at relatively constant time intervals.
         (relatively = random around an average)
     '''
-    period = 2  # average period between messages, in seconds
+    period = 10  # average period between messages, in seconds
 
-    def __init__(self, adapter):
+    def __init__(self, adapter, q_messages):
         self.adapter = adapter
-
-    def loop(self):
-        'Async job, beats every ~self.period seconds.'
-        while True:
-            yield from asyncio.sleep(random() * self.period * 2)
-            self.beat()
-
-    def beat(self):
-        self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')
+        self.q_messages = q_messages
 
     def run(self):
-        loop = asyncio.get_event_loop()
-        asyncio.async(self.loop())
-        loop.run_forever()
+        while True:
+            delay = random() * self.period * 2
+            try:
+                # We get a real message
+                # TODO: Distinguish between received and sent messages !!!
+                message = q_messages.get(timeout=delay)
+                # We don't so we send a dummy one
+            except Queue.Empty:
+                self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')

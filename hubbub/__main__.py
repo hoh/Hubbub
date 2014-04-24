@@ -42,7 +42,7 @@ def run_adapter(q_messages):
     print('run_adapter')
     from adapter.pidgin_dbus import PidginDBusAdapter
 
-    adapter = PidginDBusAdapter()
+    adapter = PidginDBusAdapter(q_messages)
     adapter.run()
 
 
@@ -62,8 +62,8 @@ def run_generator(q_messages):
     else:
         from adapter.pidgin_dbus import PidginDBusAdapter as Adapter
 
-    adapter = Adapter()
-    generator = HeartBeatGenerator(adapter)
+    adapter = Adapter(None)  # Write-only adapter, no queue
+    generator = HeartBeatGenerator(adapter, q_messages)
     generator.run()
 
 if __name__ == '__main__':
@@ -95,6 +95,7 @@ if __name__ == '__main__':
     if 'testqueue' in sys.argv:
         # For tests only, delete this afterwards, consumption
         # should go in the generator.
+        print('Queing...')
         while True:
             print('Pop', q_messages.get())
 
