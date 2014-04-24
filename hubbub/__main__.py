@@ -40,7 +40,7 @@ OPTIONS
 
 def run_adapter():
     print('run_adapter')
-    from adapter import PidginDBusAdapter
+    from adapter.pidgin_dbus import PidginDBusAdapter
 
     adapter = PidginDBusAdapter()
     adapter.run()
@@ -56,9 +56,13 @@ def run_bottle():
 def run_generator():
     print('run_generator')
     from generator import HeartBeatGenerator
-    from adapter import PidginDBusAdapter
 
-    adapter = PidginDBusAdapter()
+    if 'fake' in sys.argv:
+        from adapter.fake import FakeAdapter as Adapter
+    else:
+        from adapter.pidgin_dbus import PidginDBusAdapter as Adapter
+
+    adapter = Adapter()
     generator = HeartBeatGenerator(adapter)
     generator.run()
 
