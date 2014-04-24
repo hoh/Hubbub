@@ -20,7 +20,7 @@ from random import random
 from time import sleep
 
 
-class HeartBeatGenerator:
+class HeartBeatGenerator(object):
     '''
         Generates new messages at relatively constant time intervals.
         (relatively = random around an average)
