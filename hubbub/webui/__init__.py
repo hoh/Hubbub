@@ -27,7 +27,8 @@ import tumulus.lib as lib
 
 from .bottle import Bottle
 
-from drugstore.stats import sent_vs_recv, sent_and_recv_over_time, user_profile
+from drugstore.stats import (
+    sent_vs_recv, sent_and_recv_over_time, obfuscated_profile, real_profile)
 
 app = application = Bottle()
 
@@ -40,19 +41,23 @@ def index():
             lib.js('dimple'),
             lib.js('/stats/sent_vs_recv.js'),
             lib.js('/stats/sent_and_recv_over_time.js'),
-            lib.js('/stats/user_profile.js'),
+            lib.js('/stats/obfuscated_profile.js'),
+            lib.js('/stats/real_profile.js'),
         ),
         t.body(
             t.h1('Statistics'),
 
-            t.h2('Sent vs Recv'),
+            t.h2('Total traffic'),
             t.div(id='sent_vs_recv'),
 
             t.h2('Messages per minute'),
             t.div(id='sent_and_recv_over_time'),
 
-            t.h2('User profile'),
-            t.div(id='user_profile'),
+            t.h2('Obfuscated profile'),
+            t.div(id='obfuscated_profile'),
+
+            t.h2('Real profile'),
+            t.div(id='real_profile'),
         ),
     ).build()
 
@@ -98,12 +103,12 @@ def sent_and_recv_over_time_json():
     return json.dumps(sent_and_recv_over_time())
 
 
-@app.route('/stats/user_profile.js')
-def user_profile_js():
+@app.route('/stats/obfuscated_profile.js')
+def obfuscated_profile_js():
     return '''
-        var user_profile = dimple.newSvg("#user_profile", 800, 400);
-        d3.json("/stats/user_profile.json", function (data) {
-            var chart = new dimple.chart(user_profile, data);
+        var obfuscated_profile = dimple.newSvg("#obfuscated_profile", 800, 400);
+        d3.json("/stats/obfuscated_profile.json", function (data) {
+            var chart = new dimple.chart(obfuscated_profile, data);
             chart.addCategoryAxis("x", ["Buddy", "Direction"]);
             chart.addMeasureAxis("y", "Count");
             chart.addSeries("Type", dimple.plot.bar);
@@ -113,6 +118,26 @@ def user_profile_js():
     '''
 
 
-@app.route('/stats/user_profile.json')
-def user_profile_json():
-    return json.dumps(user_profile())
+@app.route('/stats/obfuscated_profile.json')
+def obfuscated_profile_json():
+    return json.dumps(obfuscated_profile())
+
+
+@app.route('/stats/real_profile.js')
+def real_profile_js():
+    return '''
+        var real_profile = dimple.newSvg("#real_profile", 800, 400);
+        d3.json("/stats/real_profile.json", function (data) {
+            var chart = new dimple.chart(real_profile, data);
+            chart.addCategoryAxis("x", ["Buddy", "Direction"]);
+            chart.addMeasureAxis("y", "Count");
+            chart.addSeries("Type", dimple.plot.bar);
+            chart.addLegend(200, 10, 380, 20, "right");
+            chart.draw();
+        })
+    '''
+
+
+@app.route('/stats/real_profile.json')
+def real_profile_json():
+    return json.dumps(real_profile())

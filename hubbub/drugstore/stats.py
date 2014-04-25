@@ -48,7 +48,7 @@ def sent_and_recv_over_time():
             ]
 
 
-def user_profile():
+def obfuscated_profile():
     buddies = tuple(m.buddy for m in Message.select(Message.buddy).distinct())
 
     return [{
@@ -63,5 +63,23 @@ def user_profile():
         }
         for received in (True, False)
         for dummy in (True, False)
+        for buddy in buddies
+    ]
+
+
+def real_profile():
+    buddies = tuple(m.buddy for m in Message.select(Message.buddy).distinct())
+
+    return [{
+        # 'Type': 'Dummy' if dummy else 'Real',
+        'Direction': 'Received' if received else 'Sent',
+        'Buddy': buddy,
+        'Count': Message.select().where(
+            Message.dummy == False,
+            Message.received == received,
+            Message.buddy == buddy,
+            ).count()
+        }
+        for received in (True, False)
         for buddy in buddies
     ]
