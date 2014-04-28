@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Hubbub : Noise generator plugin for Pidgin" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Hubbub</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/hoh/Hubbub">View on GitHub</a>
+
+          <h1 id="project_title">Hubbub</h1>
+          <h2 id="project_tagline">Noise generator plugin for Pidgin</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/hoh/Hubbub/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/hoh/Hubbub/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="hubbub" class="anchor" href="#hubbub"><span class="octicon octicon-link"></span></a>Hubbub</h1>
+
+<p>Noise generator and traffic analysis plugin for Pidgin.</p>
+
+<p>Hubbub consists of three parts : </p>
+
+<ul>
+<li>
+<code>pidgin</code>: a DBus client that connects to Pidgin and monitors IM traffic</li>
+<li>
+<code>generator</code>: a generator that sends dummy messages via Pidgin through DBus</li>
+<li>
+<code>webui</code>: a web user interface showing stats about IM traffic</li>
+</ul><h2>
+<a name="starting-hubbub" class="anchor" href="#starting-hubbub"><span class="octicon octicon-link"></span></a>Starting Hubbub</h2>
+
+<p>Open a terminal in the directory where you cloned the repository and load the <code>hubbub</code> virtualenv:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nb">cd </span>Path/Where/You/Will/Clone/Repositories/Hubbub
+workon hubbub
+</pre></div>
+
+<h3>
+<a name="create-the-sqlite-database-file" class="anchor" href="#create-the-sqlite-database-file"><span class="octicon octicon-link"></span></a>Create the SQLite database file</h3>
+
+<p><em>Only run this command after the initial installation of after deleting the database file:</em></p>
+
+<div class="highlight highlight-bash"><pre>python hubbub setup
+</pre></div>
+
+<h3>
+<a name="pidgin-plugin" class="anchor" href="#pidgin-plugin"><span class="octicon octicon-link"></span></a>Pidgin plugin</h3>
+
+<p>Hubbub connects to Pidgin using DBus, so you can start it and stop it at anytime without restarting Pidgin. To work, Hubbub has to run on the desktop of the user that's using Pidgin.</p>
+
+<p>To start the plugin, run <code>python hubbub pidgin</code>.</p>
+
+<h3>
+<a name="dummy-traffic-generator" class="anchor" href="#dummy-traffic-generator"><span class="octicon octicon-link"></span></a>Dummy traffic generator</h3>
+
+<p>To start the dummy traffic generator, run <code>python hubbub generator</code>.</p>
+
+<h3>
+<a name="web-interface" class="anchor" href="#web-interface"><span class="octicon octicon-link"></span></a>Web Interface</h3>
+
+<p>To start the web interface, run <code>python hubbub webui</code>. You can then open you webbrowser on http://localhost:8080/ .</p>
+
+<h3>
+<a name="all-together" class="anchor" href="#all-together"><span class="octicon octicon-link"></span></a>All together</h3>
+
+<p>You can run the Pidgin plugin, the dummy traffic generator and the Web UI at the same time with <code>python hubbub pidgin generator webui</code>.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>First, install the <a href="https://github.com/hoh/Hubbub-Pidgin">Hubbub-Pidgin</a> plugin for Pidgin. This plugin will hide dummy messages so you don't get annoyed by them.</p>
+
+<p>To so, download the binary file from <a href="https://github.com/hoh/DummyMore/releases">the releases</a> that fits your architecture (Linux i686 or x86_64 available) and copy it in your <code>~/.purple/plugins</code> directory.</p>
+
+<p>Do forget to enable the plugin in the Pidgin menu.</p>
+
+<h3>
+<a name="on-ubuntu" class="anchor" href="#on-ubuntu"><span class="octicon octicon-link"></span></a>On Ubuntu</h3>
+
+<p>Packages:</p>
+
+<div class="highlight highlight-bash"><pre>sudo apt-get install python3-dev python3-dbus libxml2-dev libxslt-dev virtualenvwrapper
+</pre></div>
+
+<p>Open a new terminal to enable <em>virtualenvwrapper</em>. If you don't, you will get the error <code>mkvirtualenv: command not found</code>.</p>
+
+<p>Create a Python virtualenv:</p>
+
+<div class="highlight highlight-bash"><pre>mkvirtualenv --system-site-packages --python<span class="o">=</span>/usr/bin/python3 hubbub
+</pre></div>
+
+<p>Optional: For the Web UI, install Python dependencies from within the virtualenv*:</p>
+
+<pre><code>pip install --upgrade tumulus
+</code></pre>
+
+<p><em>You know that you are in the 'hubbub' virtualenv if your prompt starts with '(hubbub)'.</em></p>
+
+<h3>
+<a name="all-platforms" class="anchor" href="#all-platforms"><span class="octicon octicon-link"></span></a>All platforms</h3>
+
+<p>Clone the repository:</p>
+
+<div class="highlight highlight-bash"><pre><span class="nb">cd </span>Path/Where/You/Will/Clone/Repositories/
+git clone https://github.com/hoh/Hubbub.git
+</pre></div>
+
+<p>Install the libraries:</p>
+
+<pre><code>cd Hubbub
+pip install -r requirements.txt
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Hubbub maintained by <a href="https://github.com/hoh">hoh</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
