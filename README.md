@@ -31,13 +31,17 @@ Hubbub connects to Pidgin using DBus, so you can start it and stop it at anytime
 
 To start the plugin, run `python hubbub pidgin`.
 
+### Dummy traffic generator
+
+To start the dummy traffic generator, run `python hubbub generator`.
+
 ### Web Interface
 
 To start the web interface, run `python hubbub webui`. You can then open you webbrowser on http://localhost:8080/ .
 
-### Both together
+### All together
 
-You can run both the Pidgin plugin and the Web UI at the same time with `python hubbub pidgin webui`.
+You can run the Pidgin plugin, the dummy traffic generator and the Web UI at the same time with `python hubbub pidgin generator webui`.
 
 
 ## Installation
