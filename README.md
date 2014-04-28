@@ -3,8 +3,9 @@ Hubbub
 
 Noise generator and traffic analysis plugin for Pidgin.
 
-Hubbub consists of two parts : 
+Hubbub consists of three parts : 
 * `pidgin`: a DBus client that connects to Pidgin and monitors IM traffic
+* `generator`: a generator that sends dummy messages via Pidgin through DBus
 * `webui`: a web user interface showing stats about IM traffic
 
 ## Starting Hubbub
