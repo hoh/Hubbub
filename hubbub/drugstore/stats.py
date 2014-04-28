@@ -67,11 +67,28 @@ def obfuscated_profile():
     ]
 
 
+def obfuscated_profile_outgoing():
+    buddies = tuple(m.buddy for m in Message.select(Message.buddy).distinct())
+
+    return [{
+        'Type': 'Dummy' if dummy else 'Real',
+        'Buddy': buddy,
+        'Count': Message.select().where(
+            Message.dummy == dummy,
+            Message.received == False,
+            Message.buddy == buddy,
+            ).count()
+        }
+        for dummy in (True, False)
+        for buddy in buddies
+    ]
+
+
 def real_profile():
     buddies = tuple(m.buddy for m in Message.select(Message.buddy).distinct())
 
     return [{
-        # 'Type': 'Dummy' if dummy else 'Real',
+        'Type': 'Real',
         'Direction': 'Received' if received else 'Sent',
         'Buddy': buddy,
         'Count': Message.select().where(
@@ -81,5 +98,21 @@ def real_profile():
             ).count()
         }
         for received in (True, False)
+        for buddy in buddies
+    ]
+
+
+def real_profile_outgoing():
+    buddies = tuple(m.buddy for m in Message.select(Message.buddy).distinct())
+
+    return [{
+        'Type': 'Real',
+        'Buddy': buddy,
+        'Count': Message.select().where(
+            Message.dummy == False,
+            Message.received == False,
+            Message.buddy == buddy,
+            ).count()
+        }
         for buddy in buddies
     ]
