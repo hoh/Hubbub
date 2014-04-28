@@ -46,7 +46,7 @@ You can run the Pidgin plugin, the dummy traffic generator and the Web UI at the
 
 ## Installation
 
-First, install the [DummyMore](https://github.com/hoh/DummyMore) plugin for Pidgin. This plugin will hide dummy messages so you don't get annoyed by them.
+First, install the [Hubbub-Pidgin](https://github.com/hoh/Hubbub-Pidgin) plugin for Pidgin. This plugin will hide dummy messages so you don't get annoyed by them.
 
 To so, download the binary file from [the releases](https://github.com/hoh/DummyMore/releases) that fits your architecture (Linux i686 or x86_64 available) and copy it in your `~/.purple/plugins` directory.
 
@@ -81,4 +81,10 @@ Clone the repository:
 ```bash
 cd Path/Where/You/Will/Clone/Repositories/
 git clone https://github.com/hoh/Hubbub.git
+```
+
+Install the libraries:
+```
+cd Hubbub
+pip install -r requirements.txt
 ```
