@@ -36,5 +36,12 @@ class Message(Model):
         database = db
 
 
+class Buddy(Model):
+    identifier = CharField()
+    addr = CharField()
+    enabled = BooleanField()
+
+
 def create():
     Message.create_table()
+    Buddy.create_table()
