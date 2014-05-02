@@ -38,8 +38,17 @@ class Message(Model):
 
 class Buddy(Model):
     identifier = CharField()
-    addr = CharField()
-    enabled = BooleanField()
+    alias = CharField()
+    enabled = BooleanField(default=True)
+
+    def __unicode__(self):
+        return '{} ({}) {}'.format(
+            self.alias,
+            self.identifier,
+            '(disabled)' * self.enabled)
+
+    class Meta:
+        database = db
 
 
 def create():

@@ -19,7 +19,8 @@
 from random import random
 from time import sleep
 from Queue import Empty
-from multiprocessing import Queue
+
+from hubbub.drugstore.models import Buddy
 
 
 class HeartBeatGenerator(object):
@@ -27,7 +28,7 @@ class HeartBeatGenerator(object):
         Generates new messages at relatively constant time intervals.
         (relatively = random around an average)
     '''
-    period = 10  # average period between messages, in seconds
+    period = 2  # average period between messages, in seconds
 
     def __init__(self, adapter, q_messages):
         self.adapter = adapter
@@ -45,4 +46,5 @@ class HeartBeatGenerator(object):
                 print 'generator: got a real message'
             except Empty:
                 print 'generator: sending a dummy message'
-                self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')
+                buddy = Buddy.get(alias='carol')
+                self.adapter.send_im_msg('?DUMMY:fixed_size', buddy.identifier)
