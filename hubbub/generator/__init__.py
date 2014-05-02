@@ -18,6 +18,7 @@
 
 from random import random
 from time import sleep
+from Queue import Empty
 from multiprocessing import Queue
 
 
@@ -34,11 +35,14 @@ class HeartBeatGenerator(object):
 
     def run(self):
         while True:
+            print 'generator: new loop'
             delay = random() * self.period * 2
             try:
                 # We get a real message
                 # TODO: Distinguish between received and sent messages !!!
-                message = q_messages.get(timeout=delay)
+                message = self.q_messages.get(timeout=delay)
                 # We don't so we send a dummy one
-            except Queue.Empty:
+                print 'generator: got a real message'
+            except Empty:
+                print 'generator: sending a dummy message'
                 self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')
