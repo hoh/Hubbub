@@ -32,6 +32,7 @@ OPTIONS
         Connect to Pidgin via DBus to collect a copy of the user's traffic.
     generator
         Generate dummy messages and send them through Pidgin via DBus.
+        (fake): Local tests without sending dummy messages to Pidgin.
     webui
         Launch a web user interface on http://localhost:8080 to monitor the
         actions of Hubbub.
