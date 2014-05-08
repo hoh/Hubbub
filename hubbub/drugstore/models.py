@@ -54,3 +54,6 @@ class Buddy(Model):
 def create():
     Message.create_table()
     Buddy.create_table()
+
+    Buddy(identifier='carol@okso.me', alias='Carol').save()
+    Buddy(identifier='dan@okso.me', alias='Dan').save()
