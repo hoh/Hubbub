@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from random import random
+from __future__ import print_function
+
+from random import random, gauss
 from time import sleep
 from Queue import Empty
 
@@ -36,15 +38,17 @@ class HeartBeatGenerator(object):
 
     def run(self):
         while True:
-            print 'generator: new loop'
+            print('generator: new loop')
             delay = random() * self.period * 2
             try:
                 # We get a real message
                 # TODO: Distinguish between received and sent messages !!!
                 message = self.q_messages.get(timeout=delay)
                 # We don't so we send a dummy one
-                print 'generator: got a real message'
+                print('generator: got a real message:', message)
             except Empty:
-                print 'generator: sending a dummy message'
+                print('generator: sending a dummy message')
                 buddy = Buddy.get(alias='carol')
-                self.adapter.send_im_msg('?DUMMY:fixed_size', buddy.identifier)
+                length = int(gauss(10, 8))
+                self.adapter.send_im_msg('?DUMMY:' + ('.' * max(1, length)),
+                                         buddy.identifier)
