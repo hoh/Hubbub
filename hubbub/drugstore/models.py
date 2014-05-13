@@ -45,7 +45,7 @@ class Buddy(Model):
         return '{} ({}) {}'.format(
             self.alias,
             self.identifier,
-            '(disabled)' * self.enabled)
+            '(disabled)' * (not self.enabled))
 
     class Meta:
         database = db
