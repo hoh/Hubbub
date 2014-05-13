@@ -48,7 +48,7 @@ class HeartBeatGenerator(object):
                 print('generator: got a real message:', message)
             except Empty:
                 print('generator: sending a dummy message')
-                buddy = Buddy.get(alias='carol')
+                buddy = Buddy.get(alias='Carol')
                 length = int(gauss(10, 8))
                 self.adapter.send_im_msg('?DUMMY:' + ('.' * max(1, length)),
                                          buddy.identifier)
