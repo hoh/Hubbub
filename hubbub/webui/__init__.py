@@ -27,7 +27,7 @@ import tumulus.lib as lib
 
 from .bottle import Bottle
 
-from drugstore.stats import sent_vs_recv, sent_and_recv_over_time, user_profile
+import drugstore.stats as stats
 
 app = application = Bottle()
 
@@ -40,19 +40,31 @@ def index():
             lib.js('dimple'),
             lib.js('/stats/sent_vs_recv.js'),
             lib.js('/stats/sent_and_recv_over_time.js'),
-            lib.js('/stats/user_profile.js'),
+            lib.js('/stats/obfuscated_profile.js'),
+            lib.js('/stats/obfuscated_profile_outgoing.js'),
+            lib.js('/stats/real_profile.js'),
+            lib.js('/stats/real_profile_outgoing.js'),
         ),
         t.body(
             t.h1('Statistics'),
 
-            t.h2('Sent vs Recv'),
+            t.h2('Total traffic'),
             t.div(id='sent_vs_recv'),
 
             t.h2('Messages per minute'),
             t.div(id='sent_and_recv_over_time'),
 
-            t.h2('User profile'),
-            t.div(id='user_profile'),
+            t.h2('Obfuscated outgoing profile'),
+            t.div(id='obfuscated_profile_outgoing'),
+
+            t.h2('Real outgoing profile'),
+            t.div(id='real_profile_outgoing'),
+
+            t.h2('Obfuscated profile'),
+            t.div(id='obfuscated_profile'),
+
+            t.h2('Real profile'),
+            t.div(id='real_profile'),
         ),
     ).build()
 
@@ -63,18 +75,22 @@ def sent_vs_recv_js():
         var sent_vs_recv = dimple.newSvg("#sent_vs_recv", 800, 400);
         d3.json("/stats/sent_vs_recv.json", function (data) {
             var chart = new dimple.chart(sent_vs_recv, data);
-            chart.addCategoryAxis("x", "Direction");
-            chart.addMeasureAxis("y", "Count");
+            var x = chart.addCategoryAxis("x", "Direction");
+            var y = chart.addMeasureAxis("y", "Count");
             chart.addSeries("Type", dimple.plot.bar);
+            chart.assignColor("Real", "#95A5E0");
+            chart.assignColor("Dummy", "#DA9694");
             chart.addLegend(180, 10, 360, 20, "right");
             chart.draw();
+
+            y.titleShape.text("Message Count");
         })
         '''
 
 
 @app.route('/stats/sent_vs_recv.json')
 def sent_vs_recv_json():
-    return json.dumps(sent_vs_recv())
+    return json.dumps(stats.sent_vs_recv())
 
 
 @app.route('/stats/sent_and_recv_over_time.js')
@@ -85,34 +101,118 @@ def sent_and_recv_over_time_js():
             var chart = new dimple.chart(sent_and_recv_over_time, data);
             var x = chart.addCategoryAxis("x", "Date");
             x.addOrderRule("Date");
-            chart.addMeasureAxis("y", "Count");
+            var y = chart.addMeasureAxis("y", "Count");
             chart.addSeries("Direction", dimple.plot.bar);
+            chart.assignColor("Real", "#95A5E0");
+            chart.assignColor("Dummy", "#DA9694");
             chart.addLegend(180, 10, 360, 20, "right");
             chart.draw();
+
+            y.titleShape.text("Message Count");
         })
         '''
 
 
 @app.route('/stats/sent_and_recv_over_time.json')
 def sent_and_recv_over_time_json():
-    return json.dumps(sent_and_recv_over_time())
+    return json.dumps(stats.sent_and_recv_over_time())
 
 
-@app.route('/stats/user_profile.js')
-def user_profile_js():
+@app.route('/stats/obfuscated_profile.js')
+def obfuscated_profile_js():
     return '''
-        var user_profile = dimple.newSvg("#user_profile", 800, 400);
-        d3.json("/stats/user_profile.json", function (data) {
-            var chart = new dimple.chart(user_profile, data);
-            chart.addCategoryAxis("x", ["Buddy", "Direction"]);
-            chart.addMeasureAxis("y", "Count");
+        var obfuscated_profile = dimple.newSvg("#obfuscated_profile", 800, 400);
+        d3.json("/stats/obfuscated_profile.json", function (data) {
+            var chart = new dimple.chart(obfuscated_profile, data);
+            var x = chart.addCategoryAxis("x", ["Buddy", "Direction"]);
+            var y = chart.addMeasureAxis("y", "Count");
             chart.addSeries("Type", dimple.plot.bar);
+            chart.assignColor("Real", "#95A5E0");
+            chart.assignColor("Dummy", "#DA9694");
             chart.addLegend(200, 10, 380, 20, "right");
             chart.draw();
+
+            x.titleShape.text("Contact / Sent vs Received");
+            y.titleShape.text("Message Count");
+        })
+    '''
+
+@app.route('/stats/obfuscated_profile.json')
+def obfuscated_profile_json():
+    return json.dumps(stats.obfuscated_profile())
+
+
+@app.route('/stats/obfuscated_profile_outgoing.js')
+def obfuscated_profile_outgoing_js():
+    return '''
+        var obfuscated_profile_outgoing = dimple.newSvg("#obfuscated_profile_outgoing", 800, 400);
+        d3.json("/stats/obfuscated_profile_outgoing.json", function (data) {
+            var chart = new dimple.chart(obfuscated_profile_outgoing, data);
+            var x = chart.addCategoryAxis("x", ["Buddy"]);
+            var y = chart.addMeasureAxis("y", "Count");
+            chart.addSeries("Type", dimple.plot.bar);
+            chart.assignColor("Real", "#95A5E0");
+            chart.assignColor("Dummy", "#DA9694");
+            chart.addLegend(200, 10, 380, 20, "right");
+            //chart.noFormats = true;
+            chart.draw();
+
+            x.titleShape.text("Contact");
+            y.titleShape.text("Message Count");
         })
     '''
 
 
-@app.route('/stats/user_profile.json')
-def user_profile_json():
-    return json.dumps(user_profile())
+@app.route('/stats/obfuscated_profile_outgoing.json')
+def obfuscated_profile_outgoing_json():
+    return json.dumps(stats.obfuscated_profile_outgoing())
+
+
+@app.route('/stats/real_profile.js')
+def real_profile_js():
+    return '''
+        var real_profile = dimple.newSvg("#real_profile", 800, 400);
+        d3.json("/stats/real_profile.json", function (data) {
+            var chart = new dimple.chart(real_profile, data);
+            var x = chart.addCategoryAxis("x", ["Buddy", "Direction"]);
+            var y = chart.addMeasureAxis("y", "Count");
+            chart.addSeries("Type", dimple.plot.bar);
+            chart.assignColor("Real", "#95A5E0");
+            chart.assignColor("Dummy", "#DA9694");
+            chart.addLegend(200, 10, 380, 20, "right");
+            chart.draw();
+
+            x.titleShape.text("Contact / Sent vs Received");
+            y.titleShape.text("Message Count");
+        })
+    '''
+
+
+@app.route('/stats/real_profile.json')
+def real_profile_json():
+    return json.dumps(stats.real_profile())
+
+
+@app.route('/stats/real_profile_outgoing.js')
+def real_profile_outgoing_js():
+    return '''
+        var real_profile_outgoing = dimple.newSvg("#real_profile_outgoing", 800, 400);
+        d3.json("/stats/real_profile_outgoing.json", function (data) {
+            var chart = new dimple.chart(real_profile_outgoing, data);
+            var x = chart.addCategoryAxis("x", ["Buddy"]);
+            var y = chart.addMeasureAxis("y", "Count");
+            chart.addSeries("Type", dimple.plot.bar);
+            chart.assignColor("Real", "#95A5E0");
+            chart.assignColor("Dummy", "#DA9694");
+            chart.addLegend(200, 10, 380, 20, "right");
+            chart.draw();
+
+            x.titleShape.text("Contact");
+            y.titleShape.text("Message Count");
+        })
+    '''
+
+
+@app.route('/stats/real_profile_outgoing.json')
+def real_profile_outgoing_json():
+    return json.dumps(stats.real_profile_outgoing())

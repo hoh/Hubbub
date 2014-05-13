@@ -36,5 +36,24 @@ class Message(Model):
         database = db
 
 
+class Buddy(Model):
+    identifier = CharField()
+    alias = CharField()
+    enabled = BooleanField(default=True)
+
+    def __unicode__(self):
+        return '{} ({}) {}'.format(
+            self.alias,
+            self.identifier,
+            '(disabled)' * self.enabled)
+
+    class Meta:
+        database = db
+
+
 def create():
     Message.create_table()
+    Buddy.create_table()
+
+    Buddy(identifier='carol@okso.me', alias='Carol').save()
+    Buddy(identifier='dan@okso.me', alias='Dan').save()

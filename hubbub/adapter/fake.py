@@ -19,5 +19,8 @@
 
 class FakeAdapter(object):
 
+    def __init__(self, q_messages):
+        pass
+
     def send_im_msg(self, message, recipient):
         print('send_im_msg', message, recipient)

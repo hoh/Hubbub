@@ -16,8 +16,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from random import random
+from __future__ import print_function
+
+from random import random, gauss
 from time import sleep
+from Queue import Empty
+
+from hubbub.drugstore.models import Buddy
 
 
 class HeartBeatGenerator(object):
@@ -25,12 +30,25 @@ class HeartBeatGenerator(object):
         Generates new messages at relatively constant time intervals.
         (relatively = random around an average)
     '''
-    period = 10  # average period between messages, in seconds
+    period = 2  # average period between messages, in seconds
 
-    def __init__(self, adapter):
+    def __init__(self, adapter, q_messages):
         self.adapter = adapter
+        self.q_messages = q_messages
 
     def run(self):
         while True:
-            self.adapter.send_im_msg('?DUMMY:fixed_size', 'carol@okso.me')
-            sleep(random() * self.period * 2)
+            print('generator: new loop')
+            delay = random() * self.period * 2
+            try:
+                # We get a real message
+                # TODO: Distinguish between received and sent messages !!!
+                message = self.q_messages.get(timeout=delay)
+                # We don't so we send a dummy one
+                print('generator: got a real message:', message)
+            except Empty:
+                print('generator: sending a dummy message')
+                buddy = Buddy.get(alias='carol')
+                length = int(gauss(10, 8))
+                self.adapter.send_im_msg('?DUMMY:' + ('.' * max(1, length)),
+                                         buddy.identifier)
