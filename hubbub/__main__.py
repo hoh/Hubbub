@@ -36,6 +36,8 @@ OPTIONS
     webui
         Launch a web user interface on http://localhost:8080 to monitor the
         actions of Hubbub.
+    simulate
+        Simulate the work of the generator.
 '''
 
 
@@ -67,6 +69,15 @@ def run_generator(q_messages):
     generator = HeartBeatGenerator(adapter, q_messages)
     generator.run()
 
+
+def run_simulator():
+    print('run_simulator')
+    from generator.generator import Simulator
+    from datasets.simulations import SIMPLE_LOG
+    simulator = Simulator(real_messages=SIMPLE_LOG)
+    simulator.run()
+
+
 if __name__ == '__main__':
 
     wait_for_process = None
@@ -87,6 +98,11 @@ if __name__ == '__main__':
         pc = Process(target=run_generator, args=(q_messages,))
         pc.start()
         wait_for_process = pc
+
+    if 'simulator' in sys.argv:
+        pd = Process(target=run_simulator)
+        pd.start()
+        wait_for_process = pd
 
     if 'webui' in sys.argv:
         pb = Process(target=run_bottle)
