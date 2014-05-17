@@ -52,9 +52,12 @@ class HeartBeatGenerator(Generator):
 
 class HeartBeatSimulator(Simulator):
 
-    period = 2
+    period = 5
 
     def run(self):
+        def delay():
+            return self.period
+            # return self.period * (random() * 2)
         dummy_messages = []
 
         start, end = self.date_boundaries()
@@ -64,13 +67,13 @@ class HeartBeatSimulator(Simulator):
         for real in self.real_messages:
             while t < real['date']:
                 dummy_messages.append({'date': t})
-                t += timedelta(seconds=5)
+                t += timedelta(seconds=delay())
             # We got a real message:
-            t += timedelta(seconds=5)
+            t = real['date'] + timedelta(seconds=delay())
 
         # Finishing the last day:
         while t < end:
             dummy_messages.append({'date': t})
-            t += timedelta(seconds=5)
+            t += timedelta(seconds=delay())
 
         return dummy_messages
