@@ -49,14 +49,22 @@ class Simulator(object):
     def __init__(self, real_messages):
         self.real_messages = real_messages
 
-    def run(self):
-        dummy_messages = []
+    def date_boundaries(self):
+        """Returns the begin and end datetimes for the simulation.
+        Currently the beginning of the day of the first message and the end
+        of the day of the last message."""
 
         r = self.real_messages
         start = datetime.combine(r[0]['date'], datetime.min.time())
         end = datetime.combine(r[0]['date'], datetime.max.time())
         print('start:', start)
         print('end:', end)
+        return start, end
+
+    def run(self):
+        dummy_messages = []
+
+        start, end = self.date_boundaries()
 
         t = start
         while t < end:
