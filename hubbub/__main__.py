@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import print_function
+
 import sys
 
 from multiprocessing import Process, Queue
@@ -73,9 +75,12 @@ def run_generator(q_messages):
 def run_simulator():
     print('run_simulator')
     from generator.generator import Simulator
+    from generator.heartbeat import HeartBeatSimulator
     from datasets.simulations import SIMPLE_LOG
-    simulator = Simulator(real_messages=SIMPLE_LOG)
-    simulator.run()
+    # simulator = Simulator(SIMPLE_LOG)
+    simulator = HeartBeatSimulator(SIMPLE_LOG)
+    result = simulator.run()
+    assert result
 
 
 if __name__ == '__main__':

@@ -19,8 +19,10 @@
 from random import random, gauss
 from Queue import Empty
 
+from datetime import timedelta
+
 from hubbub.drugstore.models import Buddy
-from hubbub.generator.generator import Generator
+from hubbub.generator.generator import Generator, Simulator
 
 
 class HeartBeatGenerator(Generator):
@@ -46,3 +48,29 @@ class HeartBeatGenerator(Generator):
                 length = int(gauss(10, 8))
                 self.adapter.send_im_msg('?DUMMY:' + ('.' * max(1, length)),
                                          buddy.identifier)
+
+
+class HeartBeatSimulator(Simulator):
+
+    period = 2
+
+    def run(self):
+        dummy_messages = []
+
+        start, end = self.date_boundaries()
+
+        t = start
+
+        for real in self.real_messages:
+            while t < real['date']:
+                dummy_messages.append({'date': t})
+                t += timedelta(seconds=5)
+            # We got a real message:
+            t += timedelta(seconds=5)
+
+        # Finishing the last day:
+        while t < end:
+            dummy_messages.append({'date': t})
+            t += timedelta(seconds=5)
+
+        return dummy_messages
