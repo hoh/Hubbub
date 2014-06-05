@@ -55,10 +55,10 @@ class Simulator(object):
         of the day of the last message."""
 
         r = self.real_messages
-        start = datetime.combine(r[0]['date'], datetime.min.time())
-        end = datetime.combine(r[0]['date'], datetime.max.time())
-        print('start:', start)
-        print('end:', end)
+        start = datetime.combine(r[0][0], datetime.min.time())
+        end = datetime.combine(r[-1][0], datetime.max.time())
+        #print('start:', start)
+        #print('end:', end)
         return start, end
 
     def run(self):
@@ -68,7 +68,7 @@ class Simulator(object):
 
         t = start
         while t < end:
-            dummy_messages.append({'date': t})
+            dummy_messages.append((t, 10))
             t += timedelta(seconds=5)
 
         return dummy_messages
