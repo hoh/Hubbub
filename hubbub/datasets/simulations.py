@@ -30,9 +30,9 @@ SIMPLE_LOG = [
 from random import randrange
 
 
-def simple_log(n=10):
+def simple_log(n=10, days=1):
     LOG = [
-        (datetime(2000, 01, randrange(1, 10+1), randrange(24),  randrange(60),  randrange(60), randrange(10**6)), 10)
+        (datetime(2000, 01, randrange(1, days+1), randrange(24),  randrange(60),  randrange(60), randrange(10**6)), 10)
         for i in xrange(n)
         ]
     LOG.sort()
