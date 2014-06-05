@@ -35,7 +35,7 @@ class HeartBeatGenerator(Generator):
     def run(self):
         while True:
             print('generator: new loop')
-            delay = random() * self.period * 2
+            delay = random() * self.period * 2  # TODO: Add exponential delay
             try:
                 # We get a real message
                 # TODO: Distinguish between received and sent messages !!!
