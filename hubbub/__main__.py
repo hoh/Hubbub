@@ -69,7 +69,10 @@ def run_generators(q_messages):
     adapter = Adapter(None)  # Write-only adapter, no queue
 
     import threading
-    from Queue import Queue as QQueue
+    try:
+        from Queue import Queue as QQueue
+    except ImportError:
+        from queue import Queue as QQueue
     def start_generator(buddy, q):
         generator = HeartBeatGenerator(adapter, buddy, q)
         generator.run()

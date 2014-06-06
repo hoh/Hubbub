@@ -17,7 +17,10 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from random import random, gauss
-from Queue import Empty
+try:
+    from Queue import Empty
+except ImportError:
+    from queue import Empty
 
 from datetime import timedelta
 
