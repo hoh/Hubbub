@@ -58,7 +58,7 @@ def run_bottle():
     app.run(debug=True, reload=True)
 
 
-def run_generator(q_messages):
+def run_generators(q_messages):
     print('run_generator')
     from generator import HeartBeatGenerator
 
@@ -66,10 +66,26 @@ def run_generator(q_messages):
         from adapter.fake import FakeAdapter as Adapter
     else:
         from adapter.pidgin_dbus import PidginDBusAdapter as Adapter
-
     adapter = Adapter(None)  # Write-only adapter, no queue
-    generator = HeartBeatGenerator(adapter, q_messages)
-    generator.run()
+
+    import threading
+    from Queue import Queue as QQueue
+    def start_generator(buddy, q):
+        generator = HeartBeatGenerator(adapter, buddy, q)
+        generator.run()
+
+    from hubbub.drugstore.models import Buddy
+    queues = {}
+    for buddy in Buddy.select():
+        q = QQueue()
+        queues[buddy.identifier] = q
+        t = threading.Thread(target=start_generator, args=(buddy, q))
+        t.start()
+
+    while True:
+        msg = q_messages.get()
+        for q in queues.values():
+            q.put(msg)
 
 
 def run_simulator():
@@ -100,7 +116,7 @@ if __name__ == '__main__':
         wait_for_process = pa
 
     if 'generator' in sys.argv:
-        pc = Process(target=run_generator, args=(q_messages,))
+        pc = Process(target=run_generators, args=(q_messages,))
         pc.start()
         wait_for_process = pc
 
