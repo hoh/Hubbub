@@ -25,7 +25,6 @@ db = SqliteDatabase('drugstore.db')
 
 
 class Message(Model):
-    text = CharField()
     length = IntegerField()
     date = DateTimeField()
     dummy = BooleanField()

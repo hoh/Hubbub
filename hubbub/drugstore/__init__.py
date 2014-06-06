@@ -30,7 +30,6 @@ def store(message, buddy, received=True):
 
     m = Message()
 
-    m.text = message
     m.length = len(message)
     m.date = datetime.now()
     m.dummy = is_dummy(message)
