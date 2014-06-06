@@ -35,7 +35,6 @@ class Generator(object):
 
     def run(self):
         while True:
-            self.adapter.send_im_msg('?DUMMY:')
             buddy = Buddy.get(alias='carol')
             self.adapter.send_im_msg('?DUMMY:', buddy.identifier)
             sleep(5)
