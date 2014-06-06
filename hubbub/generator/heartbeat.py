@@ -69,11 +69,12 @@ class HeartBeatSimulator(Simulator):
             while t < real[0]:
                 dummy_messages.append((t, 10))
                 #t += timedelta(seconds=delay())
-                #t += timedelta(seconds=delay() * random())
-                t += timedelta(seconds=delay() * random() * random()**0.5)
+                t += timedelta(seconds=delay() * random())
+                #t += timedelta(seconds=delay() * random() * random()**0.5)
             # We got a real message:
             #t = real[0] + timedelta(seconds=delay())
-            t = real[0] + timedelta(seconds=delay() * random() * random()**0.5)
+            t = real[0] + timedelta(seconds=delay() * random())
+            #t = real[0] + timedelta(seconds=delay() * random() * random()**0.5)
 
         # Finishing the last day:
         while t < end:
