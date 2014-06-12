@@ -79,7 +79,7 @@ def run_generators(q_messages):
 
     from hubbub.drugstore.models import Buddy
     queues = {}
-    for buddy in Buddy.select():
+    for buddy in Buddy.select().where(Buddy.enabled):
         q = QQueue()
         queues[buddy.identifier] = q
         t = threading.Thread(target=start_generator, args=(buddy, q))
