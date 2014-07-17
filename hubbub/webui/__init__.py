@@ -23,11 +23,13 @@ Web User Interface for Hubbub, built using Tumulus.
 import json
 
 from tumulus.tags import HTMLTags as t
+import tumulus.formulas as f
 import tumulus.lib as lib
 
-from .bottle import Bottle
+from .bottle import Bottle, static_file, request
 
 import drugstore.stats as stats
+from drugstore.models import Buddy
 
 app = application = Bottle()
 
@@ -36,8 +38,20 @@ app = application = Bottle()
 def index():
     return t.html(
         t.head(
+            f.utf8(),
+            f.viewport(),
+            f.IEedge(),
+
+            #lib.css('/static/bootstrap-3.2.0/css/bootstrap.min.css'),
+            #lib.css('/static/bootstrap-3.2.0/css/bootstrap-theme.min.css'),
+
+            lib.css('/static/style.css'),
+
+
             lib.js('d3'),
             lib.js('dimple'),
+            #lib.js('/static/bootstrap-3.2.0/js/bootstrap.min.js'),
+
             lib.js('/stats/sent_vs_recv.js'),
             lib.js('/stats/sent_and_recv_over_time.js'),
             lib.js('/stats/obfuscated_profile.js'),
@@ -46,27 +60,86 @@ def index():
             lib.js('/stats/real_profile_outgoing.js'),
         ),
         t.body(
-            t.h1('Statistics'),
+            t.header(
+                t.h1('Statistics'),
+            ),
 
-            t.h2('Total traffic'),
-            t.div(id='sent_vs_recv'),
+            t.section(
+                t.h2('Total traffic'),
+                t.div(id='sent_vs_recv'),
 
-            t.h2('Messages per minute'),
-            t.div(id='sent_and_recv_over_time'),
+                t.h2('Messages per minute'),
+                t.div(id='sent_and_recv_over_time'),
 
-            t.h2('Obfuscated outgoing profile'),
-            t.div(id='obfuscated_profile_outgoing'),
+                t.h2('Obfuscated outgoing profile'),
+                t.div(id='obfuscated_profile_outgoing'),
 
-            t.h2('Real outgoing profile'),
-            t.div(id='real_profile_outgoing'),
+                t.h2('Real outgoing profile'),
+                t.div(id='real_profile_outgoing'),
 
-            t.h2('Obfuscated profile'),
-            t.div(id='obfuscated_profile'),
+                t.h2('Obfuscated profile'),
+                t.div(id='obfuscated_profile'),
 
-            t.h2('Real profile'),
-            t.div(id='real_profile'),
+                t.h2('Real profile'),
+                t.div(id='real_profile'),
+
+                class_='container',
+            ),
         ),
     ).build()
+
+
+@app.route('/friends')
+def friends():
+    return t.html(
+        t.head(
+            f.utf8(),
+            f.viewport(),
+            f.IEedge(),
+
+            lib.css('/static/style.css'),
+
+            lib.js('jquery'),
+
+            lib.js('/static/react-0.10.0/react.js'),
+            lib.js('/static/friends/list.js'),
+        ),
+
+        t.body(
+            t.header(
+                t.h1('Friends')
+            ),
+
+            t.section(
+                t.div(
+                    id='friendslist',
+                ),
+            ),
+        ),
+    ).build()
+
+
+@app.get('/friends/list')
+def friends_list():
+    return json.dumps([
+        {
+            'id': b.identifier,
+            'alias': b.alias,
+            'active': b.enabled,
+        }
+        for b in Buddy.select()
+        ])
+
+
+@app.post('/friends/<friend_id>')
+def friends_switch(friend_id):
+    active = request.params.get('active') == "true"
+    buddy = Buddy.get(identifier=friend_id)
+    buddy.enabled = not active
+    buddy.save()
+    print('friend_id', friend_id)
+    print('active', active)
+    return json.dumps({'active': buddy.enabled})
 
 
 @app.route('/stats/sent_vs_recv.js')
@@ -216,3 +289,8 @@ def real_profile_outgoing_js():
 @app.route('/stats/real_profile_outgoing.json')
 def real_profile_outgoing_json():
     return json.dumps(stats.real_profile_outgoing())
+
+
+@app.route('/static/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root='./hubbub/webui/static/')

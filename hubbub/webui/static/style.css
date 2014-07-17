@@ -1,0 +1,35 @@
+
+body {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+
+    font-family: Arial;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.friendslist_name {
+    width: 300px;
+}
+
+.friendslist_status {
+    width: 100px;
+    color: #999;
+}
+
+.friendslist_switch {
+    color: red;
+}
+
+.btn-green {
+    background-color: #AFA;
+    border: solid 1px #4F4;
+}
+
+.btn-red {
+    background-color: #FAA;
+    border: solid 1px #F44;
+}
