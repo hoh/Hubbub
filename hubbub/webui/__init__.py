@@ -61,7 +61,10 @@ def index():
         ),
         t.body(
             t.header(
-                t.h1('Statistics'),
+                t.h1(
+                    'Statistics',
+                    t.a('Friends', href='/friends'),
+                ),
             ),
 
             t.section(
@@ -107,7 +110,10 @@ def friends():
 
         t.body(
             t.header(
-                t.h1('Friends')
+                t.h1(
+                    t.a('Statistics', href='/'),
+                    'Friends'
+                ),
             ),
 
             t.section(
