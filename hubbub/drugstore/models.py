@@ -21,7 +21,7 @@ from .peewee import (
     CharField, DateTimeField, BooleanField, IntegerField
 )
 
-db = SqliteDatabase('drugstore.db')
+db = SqliteDatabase('drugstore.db', threadlocals=True)
 
 
 class Message(Model):

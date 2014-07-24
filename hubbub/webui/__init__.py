@@ -63,6 +63,7 @@ def index():
             t.header(
                 t.h1(
                     'Statistics',
+                    '/',
                     t.a('Friends', href='/friends'),
                 ),
             ),
@@ -112,6 +113,7 @@ def friends():
             t.header(
                 t.h1(
                     t.a('Statistics', href='/'),
+                    '/',
                     'Friends'
                 ),
             ),

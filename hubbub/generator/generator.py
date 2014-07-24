@@ -29,15 +29,16 @@ class Generator(object):
         Simplisim Generator class.
     '''
 
-    def __init__(self, adapter, buddy, q_messages):
+    def __init__(self, adapter, buddy_id, q_messages):
         self.adapter = adapter
-        self.buddy = buddy
+        self.buddy_id = buddy_id
         self.q_messages = q_messages
 
     def run(self):
         while True:
-            buddy = self.buddy
-            self.adapter.send_im_msg('?DUMMY:', buddy.identifier)
+            buddy = Buddy.get(id=self.buddy_id)
+            if buddy.enabled:
+                self.adapter.send_im_msg('?DUMMY:', buddy.identifier)
             sleep(5)
 
 

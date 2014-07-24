@@ -74,12 +74,14 @@ def run_generators(q_messages):
     except ImportError:
         from queue import Queue as QQueue
     def start_generator(buddy, q):
-        generator = HeartBeatGenerator(adapter, buddy, q)
+        print('B', [buddy.id])
+        generator = HeartBeatGenerator(adapter, buddy.id, q)
         generator.run()
 
     from hubbub.drugstore.models import Buddy
     queues = {}
-    for buddy in Buddy.select().where(Buddy.enabled):
+    #for buddy in Buddy.select().where(Buddy.enabled):
+    for buddy in Buddy.select():
         q = QQueue()
         queues[buddy.identifier] = q
         t = threading.Thread(target=start_generator, args=(buddy, q))
