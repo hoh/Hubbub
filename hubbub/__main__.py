@@ -115,6 +115,12 @@ if __name__ == '__main__':
         from drugstore.models import create as create_db
         create_db()
 
+    if 'contacts' in sys.argv:
+        from adapter.pidgin_dbus import PidginDBusAdapter
+        adapter = PidginDBusAdapter(None)
+        adapter.update_contacts()
+        adapter
+
     if 'pidgin' in sys.argv:
         pa = Process(target=run_adapter, args=(q_messages,))
         pa.start()

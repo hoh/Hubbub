@@ -36,9 +36,10 @@ class Message(Model):
 
 
 class Buddy(Model):
+    account = IntegerField(null=True)
     identifier = CharField()
     alias = CharField()
-    enabled = BooleanField(default=True)
+    enabled = BooleanField(default=False)
 
     def __unicode__(self):
         return '{} ({}) {}'.format(
@@ -54,5 +55,5 @@ def create():
     Message.create_table()
     Buddy.create_table()
 
-    Buddy(identifier='carol@okso.me', alias='Carol').save()
-    Buddy(identifier='dan@okso.me', alias='Dan').save()
+    #Buddy(identifier='carol@okso.me', alias='Carol').save()
+    #Buddy(identifier='dan@okso.me', alias='Dan').save()

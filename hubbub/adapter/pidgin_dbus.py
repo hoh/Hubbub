@@ -25,7 +25,8 @@ from dbus.mainloop.glib import DBusGMainLoop
 
 DBusGMainLoop(set_as_default=True)
 
-from drugstore import store
+from hubbub.drugstore import store
+from hubbub.drugstore.models import Buddy
 
 
 class PidginDBusAdapter:
@@ -135,3 +136,25 @@ class PidginDBusAdapter:
             self.purple.PurpleConvImSend(
                 self.purple.PurpleConvIm(conv),
                 message)
+
+    def get_contacts(self):
+        for account in self.purple.PurpleAccountsGetAllActive():
+            for buddy_id in self.purple.PurpleFindBuddies(account, ''):
+                yield {
+                    'account': int(account),
+                    'identifier': self.purple.PurpleBuddyGetName(buddy_id),
+                    'alias': self.purple.PurpleBuddyGetAlias(buddy_id),
+                }
+
+    def update_contacts(self):
+        for contact in self.get_contacts():
+            if Buddy.filter(account=contact['account'],
+                            identifier=contact['identifier']).count() < 1:
+                buddy = Buddy(enabled=False, **contact)
+                buddy.save()
+            else:
+                print('Contact already exists: {}'.format(contact['identifier']))
+
+
+
+
