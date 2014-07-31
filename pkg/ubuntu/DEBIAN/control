@@ -1,0 +1,11 @@
+Package: hubbub
+Version: 0.1-1
+Section: net
+Priority: optional
+Architecture: amd64
+Depends: pidgin, pidgin-otr, python3, python3-pip, python3-dbus, python3-lxml, libc6
+Installed-Size: 952
+Maintainer: Hugo Herter <nospam@hugoherter.com>
+Description: Noise generator and traffic analysis plugin for Pidgin
+ Hubbub helps protecting your IM conversations against traffic
+ analysis.

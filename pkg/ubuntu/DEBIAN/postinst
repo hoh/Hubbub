@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pip3 install tumulus
+#pip3 install --upgrade tumulus
