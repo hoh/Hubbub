@@ -45,7 +45,7 @@ OPTIONS
 
 def run_adapter(q_messages):
     print('run_adapter')
-    from adapter.pidgin_dbus import PidginDBusAdapter
+    from hubbub.adapter.pidgin_dbus import PidginDBusAdapter
 
     adapter = PidginDBusAdapter(q_messages)
     adapter.run()
@@ -53,19 +53,19 @@ def run_adapter(q_messages):
 
 def run_bottle():
     print('run_bottle')
-    from webui import app
+    from hubbub.webui import app
 
     app.run(debug=True, reload=True)
 
 
 def run_generators(q_messages):
     print('run_generator')
-    from generator import HeartBeatGenerator
+    from hubbub.generator import HeartBeatGenerator
 
     if 'fake' in sys.argv:
-        from adapter.fake import FakeAdapter as Adapter
+        from hubbub.adapter.fake import FakeAdapter as Adapter
     else:
-        from adapter.pidgin_dbus import PidginDBusAdapter as Adapter
+        from hubbub.adapter.pidgin_dbus import PidginDBusAdapter as Adapter
     adapter = Adapter(None)  # Write-only adapter, no queue
 
     import threading
@@ -95,9 +95,9 @@ def run_generators(q_messages):
 
 def run_simulator():
     print('run_simulator')
-    from generator.generator import Simulator
-    from generator.heartbeat import HeartBeatSimulator
-    from datasets.simulations import SIMPLE_LOG
+    from hubbub.generator.generator import Simulator
+    from hubbub.generator.heartbeat import HeartBeatSimulator
+    from hubbub.datasets.simulations import SIMPLE_LOG
     # simulator = Simulator(SIMPLE_LOG)
     simulator = HeartBeatSimulator(SIMPLE_LOG)
     result = simulator.run()
@@ -112,11 +112,11 @@ if __name__ == '__main__':
     q_messages = Queue()
 
     if 'setup' in sys.argv:
-        from drugstore.models import create as create_db
+        from hubbub.drugstore.models import create as create_db
         create_db()
 
     if 'contacts' in sys.argv:
-        from adapter.pidgin_dbus import PidginDBusAdapter
+        from hubbub.adapter.pidgin_dbus import PidginDBusAdapter
         adapter = PidginDBusAdapter(None)
         adapter.update_contacts()
         adapter

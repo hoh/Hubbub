@@ -28,8 +28,8 @@ import tumulus.lib as lib
 
 from .bottle import Bottle, static_file, request
 
-import drugstore.stats as stats
-from drugstore.models import Buddy
+import hubbub.drugstore.stats as stats
+from hubbub.drugstore.models import Buddy
 
 app = application = Bottle()
 
