@@ -21,6 +21,7 @@ Web User Interface for Hubbub, built using Tumulus.
 '''
 
 import json
+import os.path
 
 from tumulus.tags import HTMLTags as t
 import tumulus.formulas as f
@@ -301,4 +302,8 @@ def real_profile_outgoing_json():
 
 @app.route('/static/<filepath:path>')
 def server_static(filepath):
-    return static_file(filepath, root='./hubbub/webui/static/')
+    static_dir = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        'static',
+    )
+    return static_file(filepath, root=static_dir)
