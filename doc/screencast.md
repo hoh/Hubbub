@@ -1,7 +1,7 @@
 
-== System Setup ==
+## System Setup 
 
-=== Demo system ===
+### Demo system 
 
 Ubuntu 14.04 x86_64
 
@@ -10,27 +10,27 @@ Almost pure, with the following changes:
  * cached .deb dependencies (not installed)
  * installed updates as of 1 Aug 2014
 
-=== Install Hubbub ===
+### Install Hubbub 
 
 Install the Hubbub package corresponding to your platform.
 
 
 
-== Pidgin Setup ==
+## Pidgin Setup 
 
  * Enable "Hubbub" in the "Tools/Plugins" menu.
  * Enable "Off-the-Record Messaging" in the "Tools/Plugins" menu.
 
 
-=== Pidgin Preferences ===
+### Pidgin Preferences 
 
  * Sounds: Disable Sound Events for "Message sent"
  * Conversations: Disable "Notify buddies that you are typing to them"
 
 
-== Hubbub Setup ==
+## Hubbub Setup 
 
-=== Initialize Hubbub ===
+### Initialize Hubbub 
 
 _These steps are to be executed in a terminal at the moment._
 
@@ -41,7 +41,7 @@ Pidgin CLI options (setup):
  * "setup": create the database used by Hubbub for traffic analysis and contacts management. Fails if the database already exists.
  * "contacts": import contacts information from Pidgin. Can be run anytime, exits when done.
 
-=== Start Hubbub ===
+### Start Hubbub 
 
  * Launch Hubbub from a terminal: "python3 -m hubbub pidgin generator webui"
 
