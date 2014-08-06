@@ -16,12 +16,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import os.path
+
 from .peewee import (
     Model, SqliteDatabase,
     CharField, DateTimeField, BooleanField, IntegerField
 )
 
-db = SqliteDatabase('drugstore.db', threadlocals=True)
+SETTINGS_PATH = os.path.expanduser("~/.hubbub/")
+if not os.path.isdir(SETTINGS_PATH):
+    os.makedirs(SETTINGS_PATH)
+
+db = SqliteDatabase(SETTINGS_PATH + "hubbub.db", threadlocals=True)
 
 
 class Message(Model):
