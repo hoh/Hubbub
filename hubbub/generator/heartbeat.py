@@ -38,7 +38,7 @@ class HeartBeatGenerator(Generator):
     def run(self):
         while True:
             print('generator: new loop')
-            delay = random() * self.period * 2  # TODO: Add exponential delay
+            delay = random()**2 * self.period * 2  # TODO: Add exponential delay
             try:
                 # We get a real message
                 # TODO: Distinguish between received and sent messages !!!
@@ -59,7 +59,7 @@ class HeartBeatSimulator(Simulator):
     period = 5
 
     def delay(self):
-        return self.period * (random() * 2)
+        return self.period * 2 * random()**2
 
     def run(self, delay=None):
         delay = delay or self.delay
@@ -73,11 +73,11 @@ class HeartBeatSimulator(Simulator):
             while t < real[0]:
                 dummy_messages.append((t, 10))
                 #t += timedelta(seconds=delay())
-                t += timedelta(seconds=delay() * random())
+                t += timedelta(seconds=delay())
                 #t += timedelta(seconds=delay() * random() * random()**0.5)
             # We got a real message:
             #t = real[0] + timedelta(seconds=delay())
-            t = real[0] + timedelta(seconds=delay() * random())
+            t = real[0] + timedelta(seconds=delay())
             #t = real[0] + timedelta(seconds=delay() * random() * random()**0.5)
 
         # Finishing the last day:
