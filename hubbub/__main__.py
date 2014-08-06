@@ -28,8 +28,10 @@ NAME
 SYNOPSIS
     hubbub [setup] [pidgin] [generator] [webui]
 OPTIONS
-    setup
-        Creates a new SQLite database to keep track of metadata for learning.
+    nosetup
+        Do not create a new SQLite database even if none exists.
+    contacts
+        Imports your Pidgin contacts into Hubbub
     pidgin
         Connect to Pidgin via DBus to collect a copy of the user's traffic.
     generator
@@ -111,7 +113,7 @@ if __name__ == '__main__':
     # for the generator to take into account.
     q_messages = Queue()
 
-    if 'setup' in sys.argv:
+    if not 'nosetup' in sys.argv:
         from hubbub.drugstore.models import create as create_db
         create_db()
 
