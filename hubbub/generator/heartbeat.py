@@ -33,12 +33,15 @@ class HeartBeatGenerator(Generator):
         Generates new messages at relatively constant time intervals.
         (relatively = random around an average)
     '''
-    period = 2  # average period between messages, in seconds
+    period = 5  # average period between messages, in seconds
+
+    def delay(self):
+        random()**2 * self.period * 2  # TODO: Add exponential delay
 
     def run(self):
         while True:
             print('generator: new loop')
-            delay = random()**2 * self.period * 2  # TODO: Add exponential delay
+            delay = self.delay()
             try:
                 # We get a real message
                 # TODO: Distinguish between received and sent messages !!!
@@ -59,7 +62,8 @@ class HeartBeatSimulator(Simulator):
     period = 5
 
     def delay(self):
-        return self.period * 2 * random()**2
+        #return self.period * 2 * random()**2
+        return instance.period * 1 * -log(random.random())
 
     def run(self, delay=None):
         delay = delay or self.delay
