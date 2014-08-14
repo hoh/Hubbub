@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sudo apt-get install python3-setuptools
+sudo easy_install3 pip
+pip3 install tumulus==0.2.1
