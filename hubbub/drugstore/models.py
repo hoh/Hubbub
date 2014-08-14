@@ -20,14 +20,16 @@ import os.path
 
 from .peewee import (
     Model, SqliteDatabase,
-    CharField, DateTimeField, BooleanField, IntegerField
+    CharField, DateTimeField, BooleanField, IntegerField,
+    OperationalError
 )
 
 SETTINGS_PATH = os.path.expanduser("~/.hubbub/")
 if not os.path.isdir(SETTINGS_PATH):
     os.makedirs(SETTINGS_PATH)
+DB_PATH = SETTINGS_PATH + "hubbub.db"
 
-db = SqliteDatabase(SETTINGS_PATH + "hubbub.db", threadlocals=True)
+db = SqliteDatabase(DB_PATH, threadlocals=True)
 
 
 class Message(Model):
@@ -58,8 +60,15 @@ class Buddy(Model):
 
 
 def create():
-    Message.create_table()
-    Buddy.create_table()
+    for model in Message, Buddy:
+        try:
+            model.create_table()
+        except OperationalError as error:
+            if "already exists" in error.args[0]:
+                print("Table already exists:", model)
+                continue
+            else:
+                raise error
 
     #Buddy(identifier='carol@okso.me', alias='Carol').save()
     #Buddy(identifier='dan@okso.me', alias='Dan').save()

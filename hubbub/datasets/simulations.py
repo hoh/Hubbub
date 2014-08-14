@@ -33,7 +33,7 @@ from random import randrange, gauss
 def simple_log(n=10, days=1):
     LOG = [
         (datetime(2000, 1, randrange(1, days+1), randrange(24),  randrange(60),  randrange(60), randrange(10**6)), 10)
-        for i in xrange(n)
+        for i in range(n)
         ]
     LOG.sort()
     return LOG
@@ -41,7 +41,7 @@ def simple_log(n=10, days=1):
 
 def gauss_log(n=10, days=1):
     start = 1402042195.
-    dates = dates = [gauss(mu=0.5, sigma=0.2) * 86400 + start for i in xrange(n)]
+    dates = dates = [gauss(mu=0.5, sigma=0.2) * 86400 + start for i in range(n)]
 
     LOG = [
         (datetime.fromtimestamp(start + d), 10)
