@@ -18,7 +18,7 @@
 
 from __future__ import print_function
 
-import sys
+import sys, os, time
 
 from multiprocessing import Process, Queue
 
@@ -26,8 +26,10 @@ USAGE = '''
 NAME
     hubbub
 SYNOPSIS
-    hubbub [setup] [pidgin] [generator] [webui]
+    hubbub [setup] [pidgin] [generator] [webui] [contacts] [simulator]
 OPTIONS
+    Default: contacts pidgin generator webui
+
     nosetup
         Do not create a new SQLite database even if none exists.
     contacts
@@ -40,8 +42,8 @@ OPTIONS
     webui
         Launch a web user interface on http://localhost:8080 to monitor the
         actions of Hubbub.
-    simulate
-        Simulate the work of the generator.
+    simulator
+        Run a simulation instead.
 '''
 
 
@@ -53,18 +55,27 @@ def run_adapter(q_messages):
     adapter.run()
 
 
-def run_bottle():
+def run_bottle(q_messages=None):
     print('run_bottle')
     from hubbub.webui import app
+    app.q_messages = q_messages
+    app.run(host='localhost', port=8900, debug=True, reload=True)
 
-    app.run(debug=True, reload=True)
+
+def run_update_contacts():
+    "Updating contacts database every n seconds"
+    from hubbub.adapter.pidgin_dbus import PidginDBusAdapter
+    adapter = PidginDBusAdapter(None)
+    while True:
+        adapter.update_contacts()
+        time.sleep(30)
 
 
 def run_generators(q_messages):
     print('run_generator')
     from hubbub.generator import HeartBeatGenerator
 
-    if 'fake' in sys.argv:
+    if 'fake' in argv:
         from hubbub.adapter.fake import FakeAdapter as Adapter
     else:
         from hubbub.adapter.pidgin_dbus import PidginDBusAdapter as Adapter
@@ -108,42 +119,53 @@ def run_simulator():
 
 if __name__ == '__main__':
 
-    wait_for_process = None
+    # Forking as a daemon:
+    if 'fork' in sys.argv:
+        if os.fork():
+            sys.exit()
+        else:
+            # Wait for Pidgin to setup DBus etc
+            time.sleep(2)
+
+    argv = sys.argv[1:]
+    if not argv or argv == ['fork']:  # default
+        argv = ['contacts', 'pidgin', 'generator', 'webui']
+
+        wait_for_process = None
     # Queue in which observed messages will be pushed
     # for the generator to take into account.
     q_messages = Queue()
 
-    if not 'nosetup' in sys.argv:
+    if not 'nosetup' in argv:
         from hubbub.drugstore.models import create as create_db
         create_db()
 
-    if 'contacts' in sys.argv:
-        from hubbub.adapter.pidgin_dbus import PidginDBusAdapter
-        adapter = PidginDBusAdapter(None)
-        adapter.update_contacts()
-        adapter
+    if 'contacts' in argv:
+        pe = Process(target=run_update_contacts)
+        pe.start()
+        wait_for_process = pe
 
-    if 'pidgin' in sys.argv:
+    if 'pidgin' in argv:
         pa = Process(target=run_adapter, args=(q_messages,))
         pa.start()
         wait_for_process = pa
 
-    if 'generator' in sys.argv:
+    if 'generator' in argv:
         pc = Process(target=run_generators, args=(q_messages,))
         pc.start()
         wait_for_process = pc
 
-    if 'simulator' in sys.argv:
+    if 'simulator' in argv:
         pd = Process(target=run_simulator)
         pd.start()
         wait_for_process = pd
 
-    if 'webui' in sys.argv:
-        pb = Process(target=run_bottle)
+    if 'webui' in argv:
+        pb = Process(target=run_bottle, args=(q_messages,))
         pb.start()
         wait_for_process = pb
 
-    if 'testqueue' in sys.argv:
+    if 'testqueue' in argv:
         # For tests only, delete this afterwards, consumption
         # should go in the generator.
         print('Queing...')
@@ -152,5 +174,5 @@ if __name__ == '__main__':
 
     if wait_for_process:
         wait_for_process.join()
-    elif 'setup' not in sys.argv:
+    elif 'setup' not in argv:
         print(USAGE)
