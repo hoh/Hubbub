@@ -17,11 +17,9 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
-
 from .peewee import (
     Model, SqliteDatabase,
     CharField, DateTimeField, BooleanField, IntegerField,
-    OperationalError
 )
 
 SETTINGS_PATH = os.path.expanduser("~/.hubbub/")
@@ -60,15 +58,17 @@ class Buddy(Model):
 
 
 def create():
-    for model in Message, Buddy:
-        try:
-            model.create_table()
-        except OperationalError as error:
-            if "already exists" in error.args[0]:
-                print("Table already exists:", model)
-                continue
-            else:
-                raise error
+    db.create_tables([Message, Buddy], True)
+    #for model in Message, Buddy:
+    #    try:
+    #        model.create_table()
+    #    except OperationalError as error:
+    #        continue
+            #if "already exists" in error.args[0]:
+            #    print("Table already exists:", model)
+            #    continue
+            #else:
+            #    raise error
 
     #Buddy(identifier='carol@okso.me', alias='Carol').save()
     #Buddy(identifier='dan@okso.me', alias='Dan').save()
