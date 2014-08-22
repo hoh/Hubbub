@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from math import log
 from random import random, gauss
 try:
     from Queue import Empty
@@ -36,12 +37,14 @@ class HeartBeatGenerator(Generator):
     period = 5  # average period between messages, in seconds
 
     def delay(self):
-        random()**2 * self.period * 2  # TODO: Add exponential delay
+        #random()**2 * self.period * 2  # TODO: Add exponential delay
+        return self.period * -log(random())
 
     def run(self):
         while True:
             print('generator: new loop')
             delay = self.delay()
+            print('delay: {}s'.format(delay))
             try:
                 # We get a real message
                 # TODO: Distinguish between received and sent messages !!!
@@ -63,7 +66,7 @@ class HeartBeatSimulator(Simulator):
 
     def delay(self):
         #return self.period * 2 * random()**2
-        return instance.period * 1 * -log(random.random())
+        return self.period * -log(random())
 
     def run(self, delay=None):
         delay = delay or self.delay
