@@ -31,6 +31,7 @@ from .bottle import Bottle, static_file, request
 
 import hubbub.drugstore.stats as stats
 from hubbub.drugstore.models import Buddy
+from hubbub.drugstore import store
 
 app = application = Bottle()
 
@@ -307,3 +308,13 @@ def server_static(filepath):
         'static',
     )
     return static_file(filepath, root=static_dir)
+
+@app.post('/log/dummy')
+def log_dummy():
+    if hasattr(app, 'q_messages') and app.q_messages:
+        app.q_messages.put({
+            'message': "?DUMMY:--WARNING",
+            'buddy': "not-available",
+            'received': True,
+        })
+    store("?DUMMY:--WARNING", buddy="not-available", received=True)
