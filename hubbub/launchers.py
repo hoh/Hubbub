@@ -28,6 +28,11 @@ def do_fork():
         time.sleep(2)
 
 
+def do_createdb():
+    from hubbub.drugstore.models import create as create_db
+    create_db()
+
+
 def run_adapter(q_messages):
     print('run_adapter')
     from hubbub.adapter.pidgin_dbus import PidginDBusAdapter

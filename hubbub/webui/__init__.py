@@ -309,8 +309,9 @@ def server_static(filepath):
     )
     return static_file(filepath, root=static_dir)
 
-@app.post('/log/dummy')
-def log_dummy():
+
+@app.post('/api/log/dummy')
+def api_log_dummy():
     if hasattr(app, 'q_messages') and app.q_messages:
         app.q_messages.put({
             'message': "?DUMMY:--WARNING",
@@ -318,3 +319,11 @@ def log_dummy():
             'received': True,
         })
     store("?DUMMY:--WARNING", buddy="not-available", received=True)
+    return 'OK'
+
+
+@app.get('/api/stop/generator')
+@app.post('/api/stop/generator')
+def api_stop_generator():
+    app.controller.processes['generator'].stop()
+    return "Controller = {}".format(app.controller)

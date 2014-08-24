@@ -25,6 +25,7 @@ from multiprocessing import Process, Queue
 from hubbub.webui import app
 from hubbub.launchers import (
     do_fork,
+    do_createdb,
     run_adapter,
     run_update_contacts,
     run_generators,
@@ -45,6 +46,8 @@ class Controller:
         if 'fork' in argv:
             do_fork()
 
+        do_createdb()
+
         q_messages = Queue()
         processes = {}
 
@@ -60,6 +63,8 @@ class Controller:
             fake = 'fake' in argv
             processes['generator'] = Process(target=run_generators, args=(q_messages, fake))
             processes['generator'].start()
+
+        self.processes = processes
 
         app.q_messages = q_messages
         app.controller = self
