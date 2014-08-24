@@ -1,0 +1,21 @@
+NAME
+    hubbub
+SYNOPSIS
+    hubbub [setup] [pidgin] [generator] [webui] [contacts] [simulator]
+OPTIONS
+    Default: contacts pidgin generator webui
+
+    nosetup
+        Do not create a new SQLite database even if none exists.
+    contacts
+        Imports your Pidgin contacts into Hubbub
+    pidgin
+        Connect to Pidgin via DBus to collect a copy of the user's traffic.
+    generator
+        Generate dummy messages and send them through Pidgin via DBus.
+        (fake): Local tests without sending dummy messages to Pidgin.
+    webui
+        Launch a web user interface on http://localhost:8080 to monitor the
+        actions of Hubbub.
+    simulator
+        Run a simulation instead.
